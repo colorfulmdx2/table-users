@@ -116,15 +116,13 @@ export const UsersViewElement = (props: UserType) => {
         return (
 
             <Grid item xs={12} sm={6} md={6}>
-
                 <ScrollAnimation  animateOnce animateIn="fadeIn">
-
+                    <FadeIn>
                         <Card className={classes.card}>
                             <video className={classes.video} autoPlay={false} loop muted src={props.video}/>
                         </Card>
-
+                    </FadeIn>
                 </ScrollAnimation>
-
             </Grid>
 
         )
@@ -132,9 +130,8 @@ export const UsersViewElement = (props: UserType) => {
         return (
 
             <Grid item xs={12} sm={6} md={6}>
-
                 <ScrollAnimation  animateOnce animateIn="fadeIn">
-
+                    <FadeIn>
                         <Card className={classes.card}>
                             <CardContent style={{height: '100%'}}>
                                 <Grid container
@@ -175,9 +172,8 @@ export const UsersViewElement = (props: UserType) => {
                                 </Grid>
                             </CardContent>
                         </Card>
-
+                    </FadeIn>
                 </ScrollAnimation>
-
             </Grid>
 
         )

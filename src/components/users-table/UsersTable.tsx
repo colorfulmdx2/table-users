@@ -17,6 +17,7 @@ import react from '../../assets/images/react.svg'
 import sheep from '../../assets/images/sheep.svg'
 import Zoom from '@material-ui/core/Zoom';
 import FadeIn from 'react-fade-in';
+// @ts-ignore
 import ScrollAnimation from 'react-animate-on-scroll';
 
 
@@ -43,18 +44,18 @@ export const UsersTable = (props: UsersTablePropsType) => {
 
     const users = props.data.slice(0, 20).map((e) => {
         return (
-           /* <ScrollAnimation animateIn="fadeIn">*/
-                <UsersTableElement key={e.id}
-                                   id={e.id}
-                                   name={e.name}
-                                   age={e.age}
-                                   favourite={e.favourite}
-                                   image={imagesObj[e.image]}
-                                   phone={e.phone}
-                                   phrase={e.phrase}
-                                   video={e.video}
-                />
-           /* </ScrollAnimation>*/
+
+            <UsersTableElement key={e.id}
+                               id={e.id}
+                               name={e.name}
+                               age={e.age}
+                               favourite={e.favourite}
+                               image={imagesObj[e.image]}
+                               phone={e.phone}
+                               phrase={e.phrase}
+                               video={e.video}
+            />
+
         )
     })
 
@@ -89,30 +90,30 @@ export const UsersTableElement = (props: UserType) => {
     const classes = useStyles();
     return (
 
-
-        <Paper className={classes.paper}>
-            <Grid container
-                  xl={12}
-                  justify="center"
-                  alignItems="center"
-            >
-                <Grid className={classes.cell} item xs={1} sm={1} md={1} lg={1} xl={1}>
-                    <Avatar alt="Remy Sharp" src={props.image}/>
+        <ScrollAnimation animateOnce animateIn="fadeIn">
+            <Paper className={classes.paper}>
+                <Grid container
+                      xl={12}
+                      justify="center"
+                      alignItems="center"
+                >
+                    <Grid className={classes.cell} item xs={1} sm={1} md={1} lg={1} xl={1}>
+                        <Avatar alt="Remy Sharp" src={props.image}/>
+                    </Grid>
+                    <Grid className={classes.cell} item xs={3} sm={4} md={4} lg={4} xl={4}>
+                        {props.name}
+                    </Grid>
+                    <Grid className={classes.cell} item xs={3} sm={3} md={2} lg={2} xl={2}>
+                        {`${props.age} years old`}
+                    </Grid>
+                    <Grid className={classes.cell} item xs={4} sm={3} md={4} lg={4} xl={4}>
+                        {props.phone}
+                    </Grid>
+                    <Grid className={classes.cell} item xs={1} sm={1} md={1} lg={1} xl={1}>
+                        <StarIcon fontSize={"large"} style={{color: yellow[500]}}/>
+                    </Grid>
                 </Grid>
-                <Grid className={classes.cell} item xs={3} sm={4} md={4} lg={4} xl={4}>
-                    {props.name}
-                </Grid>
-                <Grid className={classes.cell} item xs={3} sm={3} md={2} lg={2} xl={2}>
-                    {`${props.age} years old`}
-                </Grid>
-                <Grid className={classes.cell} item xs={4} sm={3} md={4} lg={4} xl={4}>
-                    {props.phone}
-                </Grid>
-                <Grid className={classes.cell} item xs={1} sm={1} md={1} lg={1} xl={1}>
-                    <StarIcon fontSize={"large"} style={{color: yellow[500]}}/>
-                </Grid>
-            </Grid>
-        </Paper>
-
+            </Paper>
+        </ScrollAnimation>
     )
 }

@@ -162,8 +162,8 @@ export const MainPage = () => {
                 </Grid>*/}
                 <Grid item xs={12}>
 
-                    {/* <UsersTable data={usersData}/>*/}
-                    <UsersView data={usersData}/>
+                     <UsersTable data={usersData}/>
+                   {/* <UsersView data={usersData}/>*/}
                 </Grid>
             </Grid>
         </>
