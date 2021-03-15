@@ -1,13 +1,11 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import {createMuiTheme, Paper, ThemeProvider} from "@material-ui/core";
-import {grey, indigo} from "@material-ui/core/colors";
-import {NavLink, Redirect, Route} from 'react-router-dom';
+import {blue, grey, indigo} from "@material-ui/core/colors";
+import {Redirect, Route} from 'react-router-dom';
 import {MainPage} from "./components/main-page/Main-page";
-import {useDispatch, useSelector} from "react-redux";
-import {getDataTC} from "./redux/reducer";
-import {AppStateType} from "./redux/store";
-import {UserType} from "./sever-api/api";
+import {useDispatch} from "react-redux";
+import {getDataTC, getFavoritesTC} from "./redux/reducer";
 
 
 function App() {
@@ -18,12 +16,12 @@ function App() {
             primary: {
                 dark: grey[900],
                 light: indigo[500],
-                main: grey[900],
+                main: grey[500],
             },
             secondary: {
                 dark: indigo[500],
                 light: indigo[500],
-                main: indigo[100],
+                main: blue[500],
             }
         }
     })
@@ -32,24 +30,16 @@ function App() {
 
     useEffect(() => {
         dispatch(getDataTC())
-    }, [])
-
-
-
-    const [searchValue, setSearchValue] = useState('aaa')
-    const searchOnChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-
-        setSearchValue(e.currentTarget.value)
-    }
+        dispatch(getFavoritesTC())
+    }, [dispatch])
 
 
     return (
         <ThemeProvider theme={theme}>
             <Paper elevation={0} square style={{minHeight: '100vh', padding: '30px 0 30px 0'}}>
                 <div>
-
                     <Route exact path='/' ><Redirect to={'/table-data'}/></Route>
-                    <Route path={'/table-data'} render={() => <MainPage/>}/>
+                    <Route path={'/table-data'} render={() => <MainPage />}/>
                 </div>
             </Paper>
         </ThemeProvider>

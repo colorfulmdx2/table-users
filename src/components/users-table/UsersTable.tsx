@@ -1,9 +1,8 @@
 import React from "react";
 import {UserType} from "../../sever-api/api";
-import {Avatar, createStyles, Grid, makeStyles, Paper, Theme} from "@material-ui/core";
+import {Avatar, createStyles, Grid, IconButton, makeStyles, Paper, Theme} from "@material-ui/core";
 import {grey, yellow} from "@material-ui/core/colors";
 import StarIcon from '@material-ui/icons/Star';
-// @ts-ignore
 import cat from '../../assets/images/cat.svg'
 import dog from '../../assets/images/dog.svg'
 import fox from '../../assets/images/fox.svg'
@@ -15,13 +14,17 @@ import pig from '../../assets/images/pig.svg'
 import raccoon from '../../assets/images/raccoon.svg'
 import react from '../../assets/images/react.svg'
 import sheep from '../../assets/images/sheep.svg'
-import Zoom from '@material-ui/core/Zoom';
 import FadeIn from 'react-fade-in';
 // @ts-ignore
 import ScrollAnimation from 'react-animate-on-scroll';
+import {useDispatch, useSelector} from "react-redux";
+import {AppStateType} from "../../redux/store";
+import {addToFavorites, removeFromFavorites} from "../../redux/reducer";
+import {saveState} from "../../local-storage/local-storage";
+import {ageMaker} from "../../utils/utils";
 
 
-export let imagesObj: any = {
+const imagesObj: any = {
     cat,
     dog,
     fox,
@@ -40,11 +43,15 @@ type UsersTablePropsType = {
     data: UserType[]
 }
 
-export const UsersTable = (props: UsersTablePropsType) => {
+export const UsersTable = React.memo((props: UsersTablePropsType) => {
 
-    const users = props.data.slice(0, 20).map((e) => {
+    const favorites = useSelector<AppStateType, UserType[]>(state => state.reducer.favorites)
+
+    const users = props.data.slice(0, 30).map((e) => {
+
+        let isFavorite = favorites && favorites.find((el) => el.id === e.id)
+
         return (
-
             <UsersTableElement key={e.id}
                                id={e.id}
                                name={e.name}
@@ -54,24 +61,23 @@ export const UsersTable = (props: UsersTablePropsType) => {
                                phone={e.phone}
                                phrase={e.phrase}
                                video={e.video}
+                               isFavorite={!!isFavorite}
+                               user={e}
             />
-
         )
     })
 
     return (
         <>
-
             <FadeIn>
                 {users}
             </FadeIn>
-
         </>
     )
-}
+})
 
 
-export const UsersTableElement = (props: UserType) => {
+export const UsersTableElement = React.memo((props: UserType) => {
 
     const useStyles = makeStyles((theme: Theme) =>
         createStyles({
@@ -87,7 +93,24 @@ export const UsersTableElement = (props: UserType) => {
 
         }),
     )
+
+    const {lang} = useSelector<AppStateType, any>(state => state.reducer)
+
     const classes = useStyles();
+    const dispatch = useDispatch()
+    const favorites = useSelector<AppStateType, UserType[]>(state => state.reducer.favorites)
+
+    const addFavoriteHandler = () => {
+        dispatch(addToFavorites(props.user))
+        saveState([...favorites, props.user])
+    }
+
+    const removeFavoriteHandler = () => {
+        dispatch(removeFromFavorites(props.user))
+        saveState(favorites.filter((e) =>props.user.id !== e.id))
+    }
+
+
     return (
 
         <ScrollAnimation animateOnce animateIn="fadeIn">
@@ -104,16 +127,37 @@ export const UsersTableElement = (props: UserType) => {
                         {props.name}
                     </Grid>
                     <Grid className={classes.cell} item xs={3} sm={3} md={2} lg={2} xl={2}>
-                        {`${props.age} years old`}
+                        {
+                           (lang ==='en')
+                               ? `${props.age} years old`
+                               : `${props.age} ${ageMaker(props.age)}`
+                        }
                     </Grid>
                     <Grid className={classes.cell} item xs={4} sm={3} md={4} lg={4} xl={4}>
                         {props.phone}
                     </Grid>
                     <Grid className={classes.cell} item xs={1} sm={1} md={1} lg={1} xl={1}>
-                        <StarIcon fontSize={"large"} style={{color: yellow[500]}}/>
+                        {
+                            props.isFavorite
+                                ? <IconButton onClick={removeFavoriteHandler}
+                                              aria-label="delete">
+                                    <StarIcon fontSize={"large"}
+                                              style={{color: yellow[500]}}
+
+                                    />
+                                </IconButton>
+
+                                : <IconButton onClick={addFavoriteHandler}
+                                              aria-label="delete">
+                                    <StarIcon fontSize={"large"}
+                                              style={{color: grey[500]}}
+
+                                    />
+                                </IconButton>
+                        }
                     </Grid>
                 </Grid>
             </Paper>
         </ScrollAnimation>
     )
-}
+})
